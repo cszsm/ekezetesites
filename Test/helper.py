@@ -1,36 +1,30 @@
-from collections import deque
+from sklearn.feature_extraction import DictVectorizer
 
-vowel_table = {"a": ["á"], "e": ["é"], "i": ["í"], "o": ["ó", "ö", "ő"], "u": ["ú", "ü", "ű"]}
-
-
-def create_row(window, window_size):
-    row = {}
-
-    for i in range(-window_size, window_size + 1):
-        row[i] = window.popleft()
-
-    del row[0]
-
-    return row
+vectorizer = DictVectorizer()
 
 
-def prepare_text(text, window_size, vowel):
-    x_e = []
-    y_e = []
+# generates template windows for the alphabet
+def generate_windows(window_size):
+    windows = []
+    alphabet = "abcdefghijklmnopqrstuvwxyz 0_*"
+    alphabet_size = len(alphabet)
 
-    window = deque((), window_size * 2 + 1)
-    for i in range(window.maxlen):
-        window.append("_")
+    for i in range(alphabet_size):
+        new_window = {}
 
-    for character in text:
-        window.append(character)
-        if window[window_size] == vowel:
-            x_e.append(create_row(window.copy(), window_size))
-            y_e.append(0)
-        if window[window_size] in vowel_table[vowel]:
-            x_e.append(create_row(window.copy(), window_size))
-            y_e.append(1)
+        end_of_slice = i + window_size * 2
+        if end_of_slice <= alphabet_size:
+            alphabet_slice = alphabet[i:end_of_slice]
+        else:
+            alphabet_slice = alphabet[i:alphabet_size]
+            alphabet_slice += alphabet[0:end_of_slice - alphabet_size]
 
-    # print(x_e)
-    # print(y_e)
-    return x_e
+        print(alphabet_slice)
+
+        for j in range(window_size):
+            new_window[-1 * (j + 1)] = alphabet_slice[window_size - 1 - j]
+            new_window[j + 1] = alphabet_slice[window_size + j]
+
+        windows.append(new_window)
+
+    return windows

@@ -1,5 +1,5 @@
 from sklearn.feature_extraction import DictVectorizer
-import helper
+import preparer
 import normalizer
 
 vectorizer = DictVectorizer()
@@ -20,14 +20,14 @@ text4n = normalizer.normalize_text(text4)
 
 print(textn)
 
-# print(((helper.prepare_text(text2, 2, "e"))[0]))
-print(len(vectorizer.fit_transform(((helper.prepare_text(text2, 4, "e")))).toarray()[0]))
+print(((preparer.prepare_text(text, 2, "e"))[2]))
+# print(len(vectorizer.fit_transform(((preparer.prepare_text(text2, 4, "e")))).toarray()[0]))
 
 
 # print(((helper.prepare_text(textn, 2, "e"))[0]))
-print(len(vectorizer.fit_transform(((helper.prepare_text(textn, 2, "e")))).toarray()[0]))
-print(len(vectorizer.fit_transform(((helper.prepare_text(text2n, 2, "e")))).toarray()[0]))
-print(len(vectorizer.fit_transform(((helper.prepare_text(text3n, 2, "e")))).toarray()[0]))
-print(len(vectorizer.fit_transform(((helper.prepare_text(text4n, 2, "e")))).toarray()[0]))
+# print(len(vectorizer.fit_transform(((preparer.prepare_text(textn, 2, "e")))).toarray()[0]))
+# print(len(vectorizer.fit_transform(((preparer.prepare_text(text2n, 2, "e")))).toarray()[0]))
+# print(len(vectorizer.fit_transform(((preparer.prepare_text(text3n, 2, "e")))).toarray()[0]))
+# print(len(vectorizer.fit_transform(((preparer.prepare_text(text4n, 2, "e")))).toarray()[0]))
 
 # print(vectorizer.get_feature_names())

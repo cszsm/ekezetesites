@@ -6,13 +6,14 @@ def ispunct(c):
     return False
 
 
-def ishunalpha(c):
-    hun_alphabet = "aábcdeéfghiíjklmnoóöőpqrstuúüűvwxyz"
+def isalpha(c):
+    hun_alphabet = "abcdefghijklmnopqrstuvwxyz"
     for char in hun_alphabet:
         if (c == char):
             return True
     return False
 
+# reduces the number of different characters to 30
 def normalize_character(c):
     lower_c = c.lower()
     if (lower_c.isspace()):
@@ -21,7 +22,7 @@ def normalize_character(c):
         return '0'
     if (ispunct(lower_c)):
         return '_'
-    if (ishunalpha(lower_c)):
+    if (isalpha(lower_c)):
         return c
     return '*'
 
