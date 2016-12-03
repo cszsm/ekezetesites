@@ -19,6 +19,7 @@ test = "Tévedsz. Eddig epedtek érte, hogy legyen, s nem volt, most majd a lelk
 test_x, test_y = preparer.prepare_text(test, 4, "e")
 vectorized_test = vectorizer.transform(test_x).toarray()
 
+
 ################
 
 input_size = len(vectorized_x[0])
@@ -51,5 +52,7 @@ correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
 
 accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
-# print(sess.run(accuracy, feed_dict={x: mnist.test.images, y_: mnist.test.labels}))
 print(sess.run(accuracy, feed_dict={x: vectorized_test, y_: test_y}))
+# word = "Eddig epedtek"
+# vx, vy = preparer.prepare_text(word, 4, "e")
+# print(sess.run(accuracy, feed_dict={x: vectorizer.transform(vx).toarray(), y_: [[1, 0], [0, 1], [1, 0], [1, 0]]}))

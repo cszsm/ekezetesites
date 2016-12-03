@@ -37,6 +37,7 @@ def prepare_text(text, window_size, vowel):
     window = deque((), window_size * 2 + 1)
     for i in range(window.maxlen):
         window.append("_")
+        lower_text += "_"
 
     for character in lower_text:
         window.append(character)
