@@ -19,8 +19,6 @@ def generate_windows(window_size):
             alphabet_slice = alphabet[i:alphabet_size]
             alphabet_slice += alphabet[0:end_of_slice - alphabet_size]
 
-        print(alphabet_slice)
-
         for j in range(window_size):
             new_window[-1 * (j + 1)] = alphabet_slice[window_size - 1 - j]
             new_window[j + 1] = alphabet_slice[window_size + j]

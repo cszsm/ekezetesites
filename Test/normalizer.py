@@ -15,14 +15,13 @@ def isalpha(c):
 
 # reduces the number of different characters to 30
 def normalize_character(c):
-    lower_c = c.lower()
-    if (lower_c.isspace()):
+    if (c.isspace()):
         return ' '
-    if (lower_c.isdigit()):
+    if (c.isdigit()):
         return '0'
-    if (ispunct(lower_c)):
+    if (ispunct(c)):
         return '_'
-    if (isalpha(lower_c)):
+    if (isalpha(c)):
         return c
     return '*'
 
