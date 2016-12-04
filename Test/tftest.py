@@ -1,5 +1,3 @@
-from tensorflow.examples.tutorials.mnist import input_data
-
 import tensorflow as tf
 
 from sklearn.feature_extraction import DictVectorizer
@@ -19,40 +17,63 @@ test = "Tévedsz. Eddig epedtek érte, hogy legyen, s nem volt, most majd a lelk
 test_x, test_y = preparer.prepare_text(test, 4, "e")
 vectorized_test = vectorizer.transform(test_x).toarray()
 
+f = open("text2.txt")
+text4 = f.read()
+text4_x, text4_y = preparer.prepare_text(text4, 4, "e")
+v_text4_x = vectorizer.transform(text4_x).toarray()
+
 
 ################
 
 input_size = len(vectorized_x[0])
-print(input_size)
 output_size = 2
 
-x = tf.placeholder(tf.float32, [None, input_size])
+n_input = tf.placeholder(tf.float32, [None, input_size])
+n_output = tf.placeholder(tf.float32, [None, output_size])
 
-W = tf.Variable(tf.zeros([input_size, output_size]))
-b = tf.Variable(tf.zeros([output_size]))
+hidden_neurons = 10
 
-y = tf.nn.softmax(tf.matmul(x, W) + b)
+b_hidden = tf.Variable(tf.random_normal([hidden_neurons]))
+W_hidden = tf.Variable(tf.random_normal([input_size, hidden_neurons]))
+hidden = tf.sigmoid(tf.matmul(n_input, W_hidden) + b_hidden)
 
-y_ = tf.placeholder(tf.float32, [None, output_size])
+W_output = tf.Variable(tf.random_normal([hidden_neurons, output_size]))
+output = tf.sigmoid(tf.matmul(hidden, W_output))
 
-cross_entropy = tf.reduce_mean(-tf.reduce_sum(y_ * tf.log(y), reduction_indices=[1]))
+# y = tf.nn.softmax(tf.matmul(n_input, W_hidden) + b_hidden)
 
-train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+# cross_entropy = tf.reduce_mean(-tf.reduce_sum(n_output * tf.log(y), reduction_indices=[1]))
+cost = tf.reduce_mean(tf.square(n_output - output))
+
+# train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+optimizer = tf.train.GradientDescentOptimizer(0.5)
+train = optimizer.minimize(cost)
 
 init = tf.initialize_all_variables()
 
 sess = tf.Session()
 sess.run(init)
 
+# for i in range(1000):
+#     sess.run(train_step, feed_dict={n_input: v_text4_x, n_output: text4_y})
 
-# for i in range(len(vectorized_x)):
-sess.run(train_step, feed_dict={x: vectorized_x, y_: y_e})
+for i in range(1000):
+    cvalues = sess.run([train, cost, W_hidden, b_hidden, W_output], feed_dict={n_input: v_text4_x, n_output: text4_y})
 
-correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(y_, 1))
+    if i % 100 == 0:
+        print("")
+        print("step: {:>3}".format(i))
+        print("loss: {}".format(cvalues[1]))
 
-accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+print("")
+print(sess.run(output, feed_dict={n_input: vectorized_test}))
 
-print(sess.run(accuracy, feed_dict={x: vectorized_test, y_: test_y}))
+# correct_prediction = tf.equal(tf.argmax(y, 1), tf.argmax(n_output, 1))
+#
+# accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+# print(sess.run(accuracy, feed_dict={x: v_text4_x, y_: text4_y}))
+# print(sess.run(accuracy, feed_dict={n_input: vectorized_test, n_output: test_y}))
 # word = "Eddig epedtek"
 # vx, vy = preparer.prepare_text(word, 4, "e")
 # print(sess.run(accuracy, feed_dict={x: vectorizer.transform(vx).toarray(), y_: [[1, 0], [0, 1], [1, 0], [1, 0]]}))
